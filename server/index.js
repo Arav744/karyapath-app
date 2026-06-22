@@ -11,6 +11,7 @@ const useSupabase = !!(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_
 const store = useSupabase ? require("./lib/store-supabase") : require("./lib/store-local");
 
 const app = express();
+app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(cors());
 app.use(express.json());
 
@@ -251,7 +252,9 @@ app.post("/api/dev/reset", async (req, res) => {
 app.get("/api/health", (req, res) => {
   res.json({ ok: true, backend: store.kind });
 });
-
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 const PORT = process.env.PORT || 4000;
 const scheduler = startScheduler(store);
 app.listen(PORT, () => {

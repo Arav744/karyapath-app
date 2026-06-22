@@ -1,0 +1,829 @@
+/* =========================================================
+   DESIGN TOKENS — derived from the Karyapath logo
+   ========================================================= */
+:root {
+  /* Brand blue - brightened slightly versus the light theme so it still
+     pops at the right contrast against a dark canvas */
+  --brand: #5b93ff;
+  --brand-dark: #3b7cee;
+  --brand-light: #8fb8ff;
+  --brand-soft: rgba(91, 147, 255, 0.16);
+  --brand-soft-line: rgba(91, 147, 255, 0.32);
+
+  /* Neutrals - deep navy canvas, lighter navy surfaces, matching the
+     reference board's dark theme */
+  --canvas: #1b2040;
+  --surface: #232a52;
+  --surface-hover: #2c3461;
+  --border: #353d6b;
+  --border-strong: #4a5384;
+  --ink: #eef1fb;
+  --ink-muted: #aab1d6;
+  --ink-faint: #7a82ab;
+
+  /* Semantic - soft variants become low-opacity tints of the same hue
+     rather than separate light/dark hex pairs, so they read correctly
+     on a dark surface without a second palette to maintain */
+  --success: #3ecf8e;
+  --success-soft: rgba(62, 207, 142, 0.16);
+  --warning: #e3a83c;
+  --warning-soft: rgba(227, 168, 60, 0.16);
+  --danger: #f0695f;
+  --danger-soft: rgba(240, 105, 95, 0.16);
+  --whatsapp: #25d366;
+  --whatsapp-dark: #3ee077;
+  --whatsapp-soft: rgba(37, 211, 102, 0.14);
+  --whatsapp-soft-line: rgba(37, 211, 102, 0.3);
+  --whatsapp-soft-ink: #eef1fb;
+
+  /* Kanban column accents - distinct from the semantic colors above so
+     the board reads as its own visual language, matching the reference */
+  --kanban-ready: #8b6ce0;
+  --kanban-progress: #e3a83c;
+  --kanban-review: #f0695f;
+  --kanban-done: #3ecf8e;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.36);
+  --shadow-lg: 0 20px 56px rgba(0, 0, 0, 0.5);
+
+  --font: "JetBrains Mono", "Fira Code", "SFMono-Regular", "Consolas", "Liberation Mono", "Menlo", monospace;
+
+  /* Compact but still comfortably tappable */
+  --tap-min: 38px;
+
+  /* Mobile-first spacing scale (4px base) */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; }
+:root { color-scheme: dark; }
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums;
+  overscroll-behavior-y: none;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: var(--ink);
+}
+
+a { color: var(--brand-dark); text-decoration: none; }
+button { font-family: inherit; }
+input, select, textarea { font-family: inherit; font-size: 15px; }
+
+/* Visible, generous focus rings - accessibility */
+button:focus-visible, input:focus-visible, select:focus-visible,
+textarea:focus-visible, a:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+.icon { width: 16px; height: 16px; flex-shrink: 0; }
+.icon-sm { width: 14px; height: 14px; }
+.icon-lg { width: 22px; height: 22px; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap;
+}
+
+/* =========================================================
+   APP SHELL
+   Mobile-first: single column, bottom nav-friendly chrome.
+   Sidebar appears only at tablet width and above.
+   ========================================================= */
+.app-shell { min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ----- Top bar (mobile + tablet + desktop all use this) ----- */
+.topbar {
+  position: sticky; top: 0; z-index: 60;
+  display: flex; align-items: center; gap: var(--sp-3);
+  height: 56px;
+  padding: 0 var(--sp-4);
+  background: var(--canvas);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-brand { display: flex; align-items: center; gap: var(--sp-2); min-width: 0; }
+.topbar-brand-mark {
+  width: 26px; height: 26px; flex-shrink: 0; border-radius: 6px;
+  background: var(--brand); color: white; font-weight: 800; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.topbar-brand-name {
+  font-weight: 800; font-size: 16px; letter-spacing: -0.01em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.topbar-spacer { flex: 1; }
+.ws-switcher-wrap { position: relative; flex-shrink: 0; }
+.topbar-user-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12.5px; font-weight: 700; color: white;
+  flex-shrink: 0; cursor: pointer; border: none;
+}
+
+/* ===== Notification bell ===== */
+.notif-wrap { position: relative; flex-shrink: 0; margin-right: 4px; }
+.topbar-icon-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: none; border: none; cursor: pointer; color: var(--ink-muted);
+  position: relative;
+}
+.topbar-icon-btn:hover { background: var(--surface-hover); color: var(--ink); }
+.notif-badge {
+  position: absolute; top: 1px; right: 1px;
+  min-width: 15px; height: 15px; padding: 0 3px;
+  background: var(--danger); color: white; border-radius: var(--radius-full);
+  font-size: 9.5px; font-weight: 800; display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--canvas);
+}
+.notif-panel {
+  position: absolute; top: 42px; right: 0;
+  width: 320px; max-height: 75vh; overflow-y: auto;
+  background: var(--canvas); border: 1px solid var(--border);
+  border-radius: var(--radius-md); box-shadow: var(--shadow-lg);
+  padding: 6px; z-index: 120;
+  opacity: 0; transform: translateY(-6px) scale(0.98);
+  pointer-events: none; transition: opacity 0.14s ease, transform 0.14s ease;
+}
+.notif-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+.notif-panel-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 10px 6px; font-size: 12px; font-weight: 700; color: var(--ink-muted);
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.notif-panel-head button {
+  background: none; border: none; color: var(--brand); font-size: 11px;
+  font-weight: 700; cursor: pointer; padding: 0; text-transform: none; letter-spacing: 0;
+}
+.notif-row {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 9px 10px; border-radius: var(--radius-sm); cursor: pointer;
+}
+.notif-row:hover { background: var(--surface-hover); }
+.notif-row.is-unread { background: var(--brand-soft); }
+.notif-row .notif-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--brand);
+  flex-shrink: 0; margin-top: 5px;
+}
+.notif-row.is-overdue-alert .notif-dot { background: var(--danger); }
+.notif-row .notif-text { font-size: 12.5px; line-height: 1.4; color: var(--ink); }
+.notif-row .notif-time { font-size: 11px; color: var(--ink-faint); margin-top: 2px; }
+.notif-panel-empty { padding: 24px 12px; text-align: center; font-size: 12.5px; color: var(--ink-faint); }
+
+/* Workspace switcher dropdown - anchored under the top-right avatar.
+   This is the "Dashboard / Workspaces under the top-right icon" pattern
+   used by Slack, Notion, Linear etc. for fast workspace switching. */
+.ws-switcher-menu {
+  position: absolute; top: 42px; right: 0;
+  width: 248px; max-height: 70vh; overflow-y: auto;
+  background: var(--canvas); border: 1px solid var(--border);
+  border-radius: var(--radius-md); box-shadow: var(--shadow-lg);
+  padding: 6px; z-index: 120;
+  opacity: 0; transform: translateY(-6px) scale(0.98);
+  pointer-events: none; transition: opacity 0.14s ease, transform 0.14s ease;
+}
+.ws-switcher-menu.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+.ws-switcher-user-block { display: flex; align-items: center; gap: 10px; padding: 10px 8px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+.ws-switcher-user-name { font-size: 13.5px; font-weight: 700; }
+.ws-switcher-user-tag { font-size: 11px; color: var(--ink-faint); }
+.ws-switcher-admin-badge { font-size: 9.5px; font-weight: 700; color: var(--brand-dark); background: var(--brand-soft); padding: 1px 6px; border-radius: var(--radius-full); margin-left: 6px; }
+.ws-switcher-section-label { display: flex; align-items: center; justify-content: space-between; font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-faint); padding: 8px 10px 4px; }
+.ws-switcher-add-btn {
+  width: 22px; height: 22px; border-radius: 5px; border: none; background: none;
+  color: var(--ink-faint); cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.ws-switcher-add-btn:hover { background: var(--surface-hover); color: var(--brand-dark); }
+.ws-switcher-item {
+  display: flex; align-items: center; gap: 9px; width: 100%; text-align: left;
+  background: none; border: none; padding: 9px 10px; min-height: 40px;
+  font-size: 13.5px; font-weight: 500; color: var(--ink);
+  border-radius: var(--radius-sm); cursor: pointer;
+}
+.ws-switcher-item:hover { background: var(--surface-hover); }
+.ws-switcher-item.active { background: var(--brand-soft); color: var(--brand-dark); font-weight: 700; }
+.ws-switcher-divider { height: 1px; background: var(--border); margin: 4px 6px; }
+.nav-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+/* Private sub-workspaces nest visually under their parent: indented,
+   smaller, with an explicit "Private" lock tag so it's unambiguous that
+   no one else - not even the parent's other members or an admin - can
+   see this entry. */
+.ws-switcher-sub-item { padding-left: 26px; font-size: 12.5px; }
+.ws-switcher-sub-item .nav-dot { width: 7px; height: 7px; }
+.ws-switcher-private-tag {
+  display: inline-flex; align-items: center; gap: 3px; margin-left: auto;
+  font-size: 9.5px; font-weight: 700; color: var(--ink-faint); flex-shrink: 0;
+}
+.ws-switcher-private-tag .icon-sm { width: 10px; height: 10px; }
+.ws-switcher-sub-add {
+  padding-left: 26px; font-size: 12px; color: var(--ink-faint); font-weight: 600;
+}
+.ws-switcher-sub-add:hover { color: var(--brand-dark); }
+
+/* ----- Main content ----- */
+.main { flex: 1; min-width: 0; padding-bottom: 88px; /* room for sticky mobile action bar */ }
+.page { padding: var(--sp-3) var(--sp-4); max-width: 1180px; margin: 0 auto; }
+
+.page-eyebrow {
+  font-size: 12px; font-weight: 600; color: var(--ink-faint);
+  margin-bottom: 2px; display: flex; align-items: center; gap: var(--sp-2);
+}
+.page-header { margin-bottom: var(--sp-4); }
+.page-title-row { display: flex; align-items: center; gap: var(--sp-3); }
+.page-title { font-size: 19px; }
+.page-subtitle { color: var(--ink-muted); margin-top: var(--sp-1); font-size: 13px; }
+.page-actions-row {
+  display: flex; gap: 6px; margin-top: var(--sp-3); flex-wrap: wrap;
+}
+.category-dot-lg { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* =========================================================
+   BUTTONS — minimum 44px tap target on touch contexts
+   ========================================================= */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  font-size: 13px; font-weight: 600;
+  padding: 0 var(--sp-3);
+  min-height: 36px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease, transform 0.05s ease;
+  white-space: nowrap; line-height: 1.2;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--brand); color: white; }
+.btn-primary:hover { background: var(--brand-dark); }
+.btn-secondary { background: var(--canvas); color: var(--ink); border-color: var(--border-strong); }
+.btn-secondary:hover { background: var(--surface-hover); }
+.btn-ghost { background: transparent; color: var(--ink-muted); border-color: transparent; }
+.btn-ghost:hover { background: var(--surface-hover); color: var(--ink); }
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { opacity: 0.92; }
+.btn-whatsapp { background: var(--whatsapp); color: white; }
+.btn-whatsapp:hover { background: var(--whatsapp-dark); }
+.btn-block { width: 100%; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-icon-only { padding: 0; width: var(--tap-min); }
+
+/* =========================================================
+   STAT LINE — compact inline summary, replaces the old card
+   grid. One quiet row of numbers; overdue gets the only color,
+   and only when it's non-zero, so it still draws the eye when
+   it matters without competing for attention otherwise.
+   ========================================================= */
+.stat-line {
+  display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap;
+  font-size: 13px; color: var(--ink-muted); margin-bottom: var(--sp-4);
+}
+.stat-line strong { color: var(--ink); font-weight: 700; }
+.stat-line-danger { color: var(--danger); }
+.stat-line-danger strong { color: var(--danger); }
+.stat-sep { width: 3px; height: 3px; border-radius: 50%; background: var(--border-strong); flex-shrink: 0; }
+
+/* =========================================================
+   TOOLBAR — search + filter, stacks on mobile
+   ========================================================= */
+.toolbar { display: flex; flex-direction: column; gap: var(--sp-2); margin-bottom: var(--sp-3); }
+.search-field { position: relative; }
+.search-field .icon { position: absolute; left: var(--sp-3); top: 50%; transform: translateY(-50%); color: var(--ink-faint); }
+.search-field input {
+  width: 100%; min-height: var(--tap-min);
+  padding: 0 var(--sp-3) 0 36px;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  background: var(--canvas); font-size: 13.5px;
+}
+.search-field input:focus { border-color: var(--brand); }
+
+.segmented {
+  display: flex; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 2px; gap: 2px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.segmented::-webkit-scrollbar { display: none; }
+.segmented button {
+  border: none; background: transparent;
+  padding: 6px var(--sp-3); min-height: 32px;
+  font-size: 12.5px; font-weight: 600; color: var(--ink-muted);
+  border-radius: 6px; cursor: pointer; white-space: nowrap; flex: 1;
+}
+.segmented button.active { background: var(--canvas); color: var(--ink); box-shadow: var(--shadow-sm); }
+
+/* =========================================================
+   TASK LIST
+   Mobile: stacked cards (touch-friendly, no horizontal scroll)
+   Tablet+: real data-table grid
+   ========================================================= */
+.task-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+
+.task-card {
+  background: var(--canvas);
+  position: relative;
+}
+.task-card.is-overdue { background: var(--danger-soft); }
+
+.status-toggle {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid var(--border-strong); background: var(--canvas);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: white; padding: 0; flex-shrink: 0;
+}
+.status-toggle.is-done { background: var(--success); border-color: var(--success); }
+
+.m-card-body { flex: 1; min-width: 0; }
+
+/* ===== VERY COMPACT SINGLE-LINE ROW =====
+   Everything - checkbox, title, status, priority, avatars, actions -
+   sits on one ~40px line. Secondary detail (due date, attachments,
+   poke timestamp, notes) is hidden by default and only appears in a
+   slim expand panel when the row itself is tapped, so density doesn't
+   cost legibility - it just costs an extra tap for the rare details. */
+.task-row-line {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px var(--sp-3); min-height: 40px;
+}
+.task-row-line[data-action="expand"] { cursor: pointer; }
+.task-row-line:hover { background: var(--surface-hover); }
+.task-card.is-overdue .task-row-line:hover { background: var(--danger-soft); }
+
+.task-name-row { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1; }
+.task-name {
+  font-size: 13.5px; font-weight: 600; color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  min-width: 0; line-height: 1.3;
+}
+.task-name.is-done { color: var(--ink-faint); text-decoration: line-through; font-weight: 500; }
+
+/* Pills/meta now ride inline in the same single line, right after the
+   title, and the whole cluster truncates as a group on very narrow
+   screens rather than wrapping to a second line. */
+.task-meta-row {
+  display: flex; align-items: center; gap: 5px; flex-shrink: 0;
+  font-size: 10.5px; color: var(--ink-faint);
+}
+.meta-chip { display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; }
+.meta-chip .icon { width: 11px; height: 11px; }
+.overdue-pill { font-size: 9.5px; font-weight: 700; letter-spacing: 0.02em; color: var(--danger); background: var(--danger-soft); padding: 1px 6px; border-radius: var(--radius-full); flex-shrink: 0; }
+.meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-strong); flex-shrink: 0; }
+
+.task-card-pills-row { display: none; }
+.pill { display: inline-flex; align-items: center; font-size: 9.5px; font-weight: 700; padding: 1px 6px; border-radius: var(--radius-full); white-space: nowrap; line-height: 1.4; flex-shrink: 0; }
+.pill-high { background: var(--danger-soft); color: var(--danger); }
+.pill-medium { background: var(--warning-soft); color: var(--warning); }
+.pill-low { background: var(--success-soft); color: var(--success); }
+.pill-pending { background: var(--warning-soft); color: var(--warning); }
+.pill-progress { background: var(--brand-soft); color: var(--brand-dark); }
+.pill-completed { background: var(--success-soft); color: var(--success); }
+.pill-review { background: rgba(224, 89, 79, 0.14); color: var(--kanban-review); }
+
+.avatar-stack { display: flex; align-items: center; flex-shrink: 0; }
+.avatar {
+  width: 19px; height: 19px; border-radius: 50%; border: 1.5px solid var(--canvas);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8.5px; font-weight: 700; color: white; margin-left: -6px; flex-shrink: 0;
+}
+.avatar:first-child { margin-left: 0; }
+.avatar-stack-empty { color: var(--ink-faint); font-size: 11px; }
+
+.task-card-quick-actions { display: flex; align-items: center; gap: 0; margin-left: 2px; flex-shrink: 0; }
+.quick-action-btn {
+  width: 26px; height: 26px; border-radius: var(--radius-sm);
+  border: none; background: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-faint); flex-shrink: 0;
+}
+.quick-action-btn:hover { background: var(--surface-hover); color: var(--ink); }
+.quick-action-btn.whatsapp-action { color: var(--whatsapp-dark); }
+
+.task-card-actions { display: none; }
+
+.expand-caret { width: 14px; height: 14px; color: var(--ink-faint); flex-shrink: 0; transition: transform 0.15s ease; }
+.task-card.is-expanded .expand-caret { transform: rotate(180deg); }
+
+/* Expand panel: only rendered when the row is tapped open. Holds the
+   due date, attachments, last-poke timestamp, and a notes preview -
+   exactly the detail that used to live permanently on the card. */
+.task-expand-panel {
+  padding: 2px var(--sp-3) 10px 42px;
+  font-size: 12px; color: var(--ink-muted); line-height: 1.6;
+}
+.task-expand-panel .expand-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+.task-expand-panel .expand-row .icon { width: 13px; height: 13px; color: var(--ink-faint); }
+.task-expand-panel .expand-notes { margin-top: 6px; color: var(--ink); }
+
+.row-menu-btn {
+  background: none; border: none; cursor: pointer; color: var(--ink-faint);
+  width: 28px; height: 28px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.row-menu-btn:hover { background: var(--surface-hover); color: var(--ink); }
+.row-menu {
+  position: absolute; right: var(--sp-3); top: 36px;
+  background: var(--canvas); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); box-shadow: var(--shadow-md);
+  padding: 4px; z-index: 20; min-width: 168px;
+}
+.row-menu button {
+  display: flex; align-items: center; gap: var(--sp-2); width: 100%; text-align: left;
+  background: none; border: none; padding: 8px var(--sp-3); min-height: 36px;
+  font-size: 13px; font-weight: 500; color: var(--ink);
+  border-radius: 6px; cursor: pointer;
+}
+.row-menu button:hover { background: var(--surface-hover); }
+.row-menu button.danger-item { color: var(--danger); }
+.row-menu button.whatsapp-item { color: var(--whatsapp-dark); }
+
+/* =========================================================
+   BOARD TABS — mirrors the Main table / Kanban / Dashboard /
+   Integrate / Automate tab row from the reference. Only Kanban
+   is a real, working view in this app; the rest are visual
+   placeholders so the layout reads correctly, disabled so it's
+   obvious they don't do anything yet.
+   ========================================================= */
+.board-tabs {
+  display: flex; align-items: center; gap: 2px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--sp-3); overflow-x: auto; scrollbar-width: none;
+}
+.board-tabs::-webkit-scrollbar { display: none; }
+.board-tab {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: none; border: none; cursor: pointer;
+  font-size: 13px; font-weight: 600; color: var(--ink-faint);
+  padding: 9px var(--sp-3); border-bottom: 2px solid transparent;
+  white-space: nowrap; flex-shrink: 0;
+}
+.board-tab.active { color: var(--ink); border-bottom-color: var(--brand); }
+.board-tab:disabled { cursor: default; opacity: 0.55; }
+.board-tab:disabled:hover { opacity: 0.8; }
+.board-tab-add { padding: 9px 10px; }
+.board-tabs-spacer { flex: 1; min-width: var(--sp-3); }
+.board-tab-ghost { color: var(--ink-faint); }
+
+.board-overdue-flag {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12.5px; font-weight: 600; color: var(--danger);
+  background: var(--danger-soft); border-radius: var(--radius-sm);
+  padding: 7px var(--sp-3); margin-bottom: var(--sp-3);
+}
+.board-overdue-flag .icon { width: 15px; height: 15px; }
+
+/* =========================================================
+   KANBAN BOARD
+   Mobile: columns stack vertically, full width, scroll the page.
+   Tablet+: columns sit side by side and scroll horizontally as a
+   group, each with its own internal vertical scroll - this is the
+   layout from the reference image.
+   ========================================================= */
+.kanban-board {
+  display: flex; flex-direction: column; gap: var(--sp-3);
+}
+.kanban-column {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.kanban-column-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px var(--sp-3); font-size: 13px; font-weight: 700; color: white;
+  background: var(--ink-faint);
+}
+.kanban-column-count {
+  background: rgba(255,255,255,0.28); border-radius: var(--radius-full);
+  font-size: 11px; padding: 1px 8px; font-weight: 700;
+}
+.kanban-head-ready-to-start { background: var(--kanban-ready); }
+.kanban-head-in-progress { background: var(--kanban-progress); }
+.kanban-head-waiting-for-review { background: var(--kanban-review); }
+.kanban-head-done { background: var(--kanban-done); }
+
+.kanban-column-body {
+  padding: var(--sp-2); display: flex; flex-direction: column; gap: var(--sp-2);
+  min-height: 64px; transition: background 0.12s ease;
+}
+.kanban-column-body.is-drop-target { background: var(--brand-soft); }
+.kanban-empty-col {
+  font-size: 12px; color: var(--ink-faint); text-align: center;
+  padding: var(--sp-4) 0;
+}
+
+.kanban-card {
+  background: var(--canvas); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: var(--sp-3);
+  cursor: pointer; position: relative;
+  transition: box-shadow 0.12s ease, border-color 0.12s ease;
+}
+.kanban-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+.kanban-card.is-dragging { opacity: 0.4; }
+.kanban-card.is-overdue { border-left: 3px solid var(--danger); }
+.kanban-card-title { font-size: 13.5px; font-weight: 600; color: var(--ink); line-height: 1.4; margin-bottom: 8px; }
+.kanban-card-pills { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+.kanban-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.kanban-card-foot-stats { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--ink-faint); }
+.kanban-card-foot-stats .meta-chip { gap: 3px; }
+.kanban-row-menu { top: calc(100% - 6px); right: var(--sp-2); }
+
+/* =========================================================
+   WORKSPACE GRID (dashboard) — single column mobile, grid desktop
+   ========================================================= */
+.workspace-grid { display: flex; flex-direction: column; gap: var(--sp-3); }
+.workspace-card {
+  background: var(--canvas); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: var(--sp-4);
+  cursor: pointer; position: relative;
+  transition: border-color 0.14s ease, box-shadow 0.14s ease;
+  min-height: var(--tap-min);
+}
+.workspace-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md); }
+.workspace-card-top { display: flex; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-3); }
+.workspace-card h3 { font-size: 15px; }
+.workspace-card-stats { display: flex; gap: var(--sp-5); }
+.workspace-card-stat-num { font-size: 17px; font-weight: 800; }
+.workspace-card-stat-label { font-size: 11px; color: var(--ink-faint); }
+.workspace-role-tag {
+  position: absolute; top: var(--sp-4); right: var(--sp-4);
+  font-size: 10px; font-weight: 700; color: var(--ink-faint);
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 3px 8px; border-radius: var(--radius-full);
+}
+.workspace-role-tag.shared { color: var(--brand-dark); background: var(--brand-soft); border-color: var(--brand-soft-line); }
+.workspace-locked-note {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11.5px; color: var(--ink-faint); margin-top: var(--sp-3);
+}
+
+/* =========================================================
+   STICKY MOBILE ACTION BAR
+   Keeps the primary action reachable with a thumb at all times.
+   Hidden on tablet+ since the page header button is reachable.
+   ========================================================= */
+.sticky-action-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 70;
+  padding: var(--sp-3) var(--sp-4);
+  padding-bottom: max(var(--sp-3), env(safe-area-inset-bottom));
+  background: var(--canvas);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -4px 16px rgba(20,24,31,0.06);
+}
+
+/* =========================================================
+   MODALS
+   Mobile: bottom sheet, slides up, rounded top corners only.
+   Tablet+: centered dialog box.
+   ========================================================= */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(20, 24, 31, 0.45);
+  z-index: 999; display: flex; align-items: flex-end; justify-content: center;
+}
+.modal-box {
+  background: var(--canvas);
+  width: 100%; max-height: 92vh; overflow-y: auto;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: var(--sp-5) var(--sp-4) var(--sp-6);
+  box-shadow: var(--shadow-lg);
+  animation: sheet-up 0.2s ease;
+}
+@keyframes sheet-up { from { transform: translateY(24px); opacity: 0.6; } to { transform: translateY(0); opacity: 1; } }
+.modal-grabber { width: 36px; height: 4px; background: var(--border-strong); border-radius: var(--radius-full); margin: 0 auto var(--sp-4); }
+.modal-box h2 { font-size: 18px; margin-bottom: 4px; }
+.modal-subtitle { color: var(--ink-muted); font-size: 13px; margin-bottom: var(--sp-4); }
+.modal-actions { display: flex; flex-direction: column-reverse; gap: var(--sp-2); margin-top: var(--sp-5); }
+.modal-actions .btn { width: 100%; }
+
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: var(--sp-4); }
+.field label { font-size: 12.5px; font-weight: 600; color: var(--ink-muted); }
+.field input, .field select, .field textarea {
+  padding: 0 var(--sp-3); min-height: var(--tap-min);
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  background: var(--canvas); color: var(--ink);
+}
+.field textarea { padding: var(--sp-3); min-height: 80px; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--brand); }
+.field-row { display: flex; flex-direction: column; gap: var(--sp-3); }
+.field-hint { font-size: 12px; color: var(--ink-faint); margin-top: 2px; }
+.error-text { color: var(--danger); font-size: 13px; margin: -4px 0 var(--sp-3) 0; }
+
+.assignee-grid { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.assignee-option {
+  display: flex; align-items: center; gap: 7px;
+  min-height: 38px; padding: 0 12px 0 6px;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-full);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  background: var(--canvas); color: var(--ink-muted); user-select: none;
+}
+.assignee-option.checked { background: var(--brand-soft); border-color: var(--brand-soft-line); color: var(--brand-dark); }
+.assignee-option input { display: none; }
+.assignee-option .avatar { width: 22px; height: 22px; font-size: 9.5px; margin-left: 0; }
+
+/* WhatsApp poke modal preview bubble */
+.wa-preview {
+  background: var(--whatsapp-soft);
+  border: 1px solid var(--whatsapp-soft-line);
+  border-radius: var(--radius-md);
+  padding: var(--sp-3);
+  font-size: 13px;
+  white-space: pre-wrap;
+  line-height: 1.55;
+  color: var(--whatsapp-soft-ink);
+  max-height: 220px;
+  overflow-y: auto;
+}
+.wa-rate-warning {
+  display: flex; align-items: flex-start; gap: var(--sp-2);
+  background: var(--warning-soft); color: var(--warning);
+  border-radius: var(--radius-sm); padding: var(--sp-3);
+  font-size: 12.5px; margin-top: var(--sp-3);
+}
+
+/* Activity log */
+.activity-list { display: flex; flex-direction: column; gap: var(--sp-3); margin-top: var(--sp-2); }
+.activity-item { display: flex; gap: var(--sp-3); font-size: 13px; }
+.activity-icon {
+  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface); color: var(--ink-muted);
+}
+.activity-icon.whatsapp { background: var(--whatsapp-soft); color: var(--whatsapp-dark); }
+.activity-text { color: var(--ink); }
+.activity-time { color: var(--ink-faint); font-size: 11.5px; margin-top: 1px; }
+
+/* =========================================================
+   EMPTY STATE / TOAST
+   ========================================================= */
+.empty-state { text-align: center; padding: var(--sp-10) var(--sp-4); color: var(--ink-faint); }
+.empty-state .icon-lg { width: 36px; height: 36px; margin-bottom: var(--sp-3); opacity: 0.5; }
+.empty-state p { font-size: 14px; margin: 0; }
+
+.toast {
+  position: fixed; bottom: 90px; left: var(--sp-4); right: var(--sp-4); z-index: 1100;
+  background: #11152b; color: white;
+  padding: var(--sp-3) var(--sp-4); border-radius: var(--radius-sm);
+  font-size: 13.5px; font-weight: 500;
+  display: flex; align-items: center; gap: var(--sp-2);
+  opacity: 0; transform: translateY(10px);
+  transition: all 0.22s ease; pointer-events: none;
+  box-shadow: var(--shadow-lg);
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.error { background: var(--danger); }
+.toast.whatsapp { background: var(--whatsapp-dark); }
+.toast .icon { color: var(--success); flex-shrink: 0; }
+.toast.error .icon, .toast.whatsapp .icon { color: white; }
+
+.proto-banner {
+  background: #0e1226; color: #c9d3e8; text-align: center;
+  font-size: 11.5px; font-weight: 500; padding: 6px var(--sp-3);
+}
+.proto-banner strong { color: white; }
+
+/* =========================================================
+   AUTH SCREEN — login / forgot-password (front-end only demo;
+   the real server-backed auth comes later, per the brief).
+   ========================================================= */
+.auth-shell {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: var(--sp-5) var(--sp-4);
+}
+.auth-card {
+  width: 100%; max-width: 380px; background: var(--canvas);
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: var(--sp-6) var(--sp-5); box-shadow: var(--shadow-lg);
+}
+.auth-logo-row { display: flex; align-items: center; gap: 10px; margin-bottom: var(--sp-5); justify-content: center; }
+.auth-logo-row img { width: 34px; height: 34px; }
+.auth-logo-row span { font-size: 20px; font-weight: 800; color: var(--ink); }
+.auth-title { font-size: 19px; font-weight: 700; color: var(--ink); margin-bottom: 4px; text-align: center; }
+.auth-subtitle { font-size: 13px; color: var(--ink-muted); text-align: center; margin-bottom: var(--sp-5); line-height: 1.5; }
+.auth-toggle-method {
+  display: flex; background: var(--surface); border-radius: var(--radius-sm);
+  padding: 3px; margin-bottom: var(--sp-4); gap: 3px;
+}
+.auth-toggle-method button {
+  flex: 1; border: none; background: transparent; padding: 7px 0;
+  font-size: 12.5px; font-weight: 600; color: var(--ink-muted);
+  border-radius: 7px; cursor: pointer;
+}
+.auth-toggle-method button.active { background: var(--canvas); color: var(--ink); box-shadow: var(--shadow-sm); }
+.auth-forgot-link {
+  background: none; border: none; color: var(--brand); font-size: 12.5px;
+  font-weight: 600; cursor: pointer; padding: 0; align-self: flex-end; margin: -10px 0 var(--sp-4);
+}
+.auth-demo-box {
+  margin-top: var(--sp-5); padding: var(--sp-3) var(--sp-4);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); font-size: 12px; color: var(--ink-muted); line-height: 1.7;
+}
+.auth-demo-box strong { color: var(--ink); display: block; margin-bottom: 4px; font-size: 12.5px; }
+.auth-demo-row { display: flex; justify-content: space-between; gap: var(--sp-2); }
+.auth-demo-row button {
+  border: none; background: var(--brand-soft); color: var(--brand-dark);
+  font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-full);
+  cursor: pointer; flex-shrink: 0;
+}
+.auth-back-row { margin-bottom: var(--sp-4); }
+.auth-back-row button {
+  border: none; background: none; color: var(--ink-muted); font-size: 13px;
+  font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 0;
+}
+.auth-success-box {
+  display: flex; gap: 10px; align-items: flex-start; background: var(--success-soft);
+  color: var(--success); border-radius: var(--radius-sm); padding: var(--sp-3) var(--sp-4);
+  font-size: 13px; line-height: 1.5; margin-bottom: var(--sp-4);
+}
+.auth-success-box .icon { flex-shrink: 0; margin-top: 1px; }
+
+/* =========================================================
+   RESPONSIVE BREAKPOINTS
+   Mobile base styles above. Tablet (>=680px) widens spacing and
+   switches to side-by-side layouts. Desktop (>=1024px)
+   introduces the real data-table and wider stat grid.
+   ========================================================= */
+@media (min-width: 680px) {
+  .page { padding: var(--sp-6) var(--sp-6) var(--sp-10); }
+  .page-title { font-size: 26px; }
+  .page-header { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-4); }
+  .page-actions-row { margin-top: 0; flex-shrink: 0; }
+  .toolbar { flex-direction: row; justify-content: space-between; align-items: center; }
+  .search-field { flex: 1; max-width: 320px; }
+  .segmented { flex: 0 0 auto; }
+  .sticky-action-bar { display: none; }
+  .main { padding-bottom: 0; }
+  .modal-overlay { align-items: center; }
+  .modal-box { width: 480px; max-width: 92%; border-radius: var(--radius-lg); animation: none; max-height: 88vh; }
+  .modal-grabber { display: none; }
+  .modal-actions { flex-direction: row; justify-content: flex-end; }
+  .modal-actions .btn { width: auto; }
+  .field-row { flex-direction: row; gap: var(--sp-3); }
+  .field-row .field { flex: 1; }
+  .workspace-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--sp-3); }
+
+  /* Kanban: columns sit side by side and the board scrolls horizontally
+     as a unit, matching the reference layout. Each column gets a fixed
+     width so cards don't stretch awkwardly wide. */
+  .kanban-board {
+    flex-direction: row; align-items: flex-start;
+    overflow-x: auto; padding-bottom: var(--sp-2);
+  }
+  .kanban-column { flex: 0 0 272px; max-height: calc(100vh - 260px); }
+  .kanban-column-body { overflow-y: auto; }
+}
+
+@media (min-width: 1024px) {
+  /* Desktop: switch the task list from cards to a real data table */
+  .task-list.as-table { display: block; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: var(--canvas); }
+  .table-head-row {
+    display: grid; grid-template-columns: 30px minmax(0,1fr) 130px 100px 110px 36px;
+    align-items: center; gap: var(--sp-3); height: 38px; padding: 0 var(--sp-4);
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-faint);
+  }
+  .task-list.as-table .task-card {
+    display: grid; grid-template-columns: 30px minmax(0,1fr) 130px 100px 110px 36px;
+    align-items: center; gap: var(--sp-3);
+    border: none; border-bottom: 1px solid var(--border);
+    border-radius: 0; padding: 0 var(--sp-4); height: 64px;
+  }
+  .task-list.as-table .task-card:last-child { border-bottom: none; }
+  .task-list.as-table .task-card:hover { background: var(--surface); }
+  /* Show desktop columns, hide the mobile compact body */
+  .task-list.as-table .m-card-body { display: none; }
+  .task-list.as-table .d-col { display: flex; align-items: center; }
+  .task-list.as-table .d-col-name { min-width: 0; gap: 8px; }
+  .task-list.as-table .d-col-name .task-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .task-list.as-table .status-toggle { margin: 0; }
+  .task-list.as-table .row-menu { top: 56px; right: var(--sp-4); }
+}
+@media (max-width: 1023px) {
+  .table-head-row { display: none; }
+  /* Mobile/tablet: hide desktop-only grid columns entirely - the compact
+     single-line row renders its own checkbox inside .task-row-line. */
+  .d-col { display: none; }
+}

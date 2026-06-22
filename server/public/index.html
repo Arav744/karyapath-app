@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>कार्यपथ — Karyapath</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="proto-banner">कार्यपथ — connected to a real backend (<span id="backend-kind">checking…</span>). Login with the IDs your admin gave you.</div>
+
+<div id="auth-root"><!-- rendered by JS: login screen --></div>
+
+<div id="app-root" style="display:none;">
+<div class="app-shell">
+  <header class="topbar">
+    <div class="topbar-brand">
+      <span class="topbar-brand-mark">क</span>
+      <span class="topbar-brand-name" id="topbar-title">कार्यपथ</span>
+    </div>
+    <div class="topbar-spacer"></div>
+    <div class="notif-wrap">
+      <button class="topbar-icon-btn" id="topbar-bell" aria-label="Notifications" aria-haspopup="true">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5a6 6 0 0 1 12 0c0 3.2 1 4.7 1.8 5.8.2.3 0 .7-.4.7H4.6c-.4 0-.6-.4-.4-.7C5 14.2 6 12.7 6 9.5Z"/><path d="M9.5 19a2.5 2.5 0 0 0 5 0"/></svg>
+        <span class="notif-badge" id="notif-badge" style="display:none;"></span>
+      </button>
+      <div class="notif-panel" id="notif-panel"></div>
+    </div>
+    <div class="ws-switcher-wrap">
+      <button class="topbar-user-avatar" id="topbar-avatar" aria-label="Workspaces and account" aria-haspopup="true"></button>
+      <div class="ws-switcher-menu" id="ws-switcher-menu"></div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="page" id="page-content"><!-- rendered by JS --></div>
+  </div>
+</div>
+</div>
+
+<div id="modal-root"></div>
+<div id="sticky-bar-root"></div>
+<div id="toast-root"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
