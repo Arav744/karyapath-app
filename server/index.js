@@ -255,7 +255,7 @@ app.get("/api/health", (req, res) => {
 const PORT = process.env.PORT || 4000;
 const scheduler = startScheduler(store);
 app.listen(PORT, () => {
-  console.log(`Karyapath server running on http://localhost:${PORT}`);
+  console.log(`Karyapath server running on ${PORT}`);
   console.log(`Storage backend: ${store.kind}${useSupabase ? "" : " (set SUPABASE_URL + SUPABASE_SERVICE_KEY in .env to switch to Postgres)"}`);
   console.log(`Alert scheduler running - checking due dates every 5 minutes.`);
 });
