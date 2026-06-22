@@ -15,9 +15,6 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(cors());
 app.use(express.json());
 
-// Serve the client as static files so the whole app is one server to run.
-app.use(express.static(path.join(__dirname, "..", "client")));
-
 const requireAuth = authMiddleware(store);
 
 function publicUser(u) {
