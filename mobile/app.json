@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Karyapath",
+    "slug": "karyapath-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#1b2040"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.karyapath.mobile"
+    },
+    "android": {
+      "package": "com.karyapath.mobile",
+      "adaptiveIcon": {
+        "backgroundColor": "#1b2040"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#5b93ff"
+        }
+      ]
+    ]
+  }
+}
