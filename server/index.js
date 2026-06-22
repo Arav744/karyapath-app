@@ -11,7 +11,7 @@ const useSupabase = !!(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_
 const store = useSupabase ? require("./lib/store-supabase") : require("./lib/store-local");
 
 const app = express();
-app.use(express.static(path.join(__dirname, "..", "public")));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 app.use(express.json());
 
