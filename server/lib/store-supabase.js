@@ -178,7 +178,7 @@ module.exports = {
   getUser, listUsers,
   listWorkspaces, getWorkspace, createWorkspace,
   listMemberships, listAllMemberships,
-  listTasks, getTask, createTask, logActivity, updateTask, deleteTaskPermanently,
+  listTasks, getTask, createTask, updateTask, deleteTaskPermanently,
   listPokes, createPoke,
   resetToSeed,
   listAllActiveTasks, getSentAlertKeys, recordSentAlert,
