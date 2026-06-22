@@ -5,7 +5,7 @@
    now calls `api.*` and awaits a real HTTP response.
    ========================================================= */
 
-const API_BASE = "/api";
+const API_BASE = "";
 
 let session = {
   token: localStorage.getItem("karyapath_token") || null,
