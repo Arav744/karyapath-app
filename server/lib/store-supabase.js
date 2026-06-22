@@ -16,7 +16,10 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SER
 });
 
 function unwrap({ data, error }) {
-  if (error) throw new Error(`Supabase error: ${error.message}`);
+  if (error) {
+    console.log("SUPABASE ERROR:", error);
+    throw new Error(`Supabase error: ${error.message}`);
+  }
   return data;
 }
 
